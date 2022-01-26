@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 export default {
   name: 'register-form',
@@ -229,7 +229,6 @@ export default {
 .form .submit-btn {
   background: #baffd9;
   padding: 15px 0;
-  border-radius: 10px;
 }
 .form .action {
   grid-area: action;
@@ -241,14 +240,14 @@ export default {
 .form .action .btn {
   padding: 15px;
   background: #bac4ff;
-  border-radius: 10px;
 }
 select {
   transform: translate(-5px);
 }
 select, option {
   font-family: var(--font-body);
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
+  background: #ffffff;
 }
 </style>
