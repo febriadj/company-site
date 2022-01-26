@@ -26,7 +26,7 @@ npm run dev
 Jalankan aplikasi dalam mode development. kemudian buka http://localhost:3000 di browser.
 
 # Tangkapan Layar 📸
-![desktop](./documents/desktop.png)
+![desktop](./documents/images/desktop.png)
 
 <table>
   <tr>
