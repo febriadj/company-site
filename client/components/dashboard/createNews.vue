@@ -2,7 +2,7 @@
   <div :class="[$style['create-news'], createNewsIsOpen && $style.active]">
     <div :class="[$style['create-news-wrap'], createNewsIsOpen && $style.active]">
       <div :class="$style.header">
-        <h2 :class="$style.title">Create News</h2>
+        <h2 :class="$style.title">Buat Pengumuman</h2>
         <button
           type="button"
           :class="$style.btn"
@@ -23,6 +23,15 @@
             v-model="form.subject"
           >
         </label>
+        <label for="file" :class="$style.fields">
+          <input
+            type="file"
+            name="attachment"
+            id="file"
+            :class="[$style.control, $style['control-file']]"
+            @change="handleInputFile"
+          >
+        </label>
         <label for="body" :class="$style.fields">
           <textarea
             name="body"
@@ -33,14 +42,7 @@
           </textarea>
         </label>
         <div :class="$style.action">
-          <button type="submit" :class="$style['submit-btn']">Create</button>
-          <input
-            type="file"
-            name="file"
-            id="file"
-            :class="[$style.control, $style['control-file']]"
-          >
-          <label for="file" class="bx bx-paperclip" :class="$style['file-btn']"></label>
+          <button type="submit" :class="$style['submit-btn']">Buat</button>
         </div>
       </form>
     </div>
@@ -48,7 +50,7 @@
 </template>
 
 <script>
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 export default {
   name: 'create-news',
@@ -60,30 +62,31 @@ export default {
   data: () => ({
     form: {
       subject: '',
-      shortDesc: '',
       body: '',
-      file: null,
+      attachment: null,
     },
   }),
   methods: {
+    handleInputFile(event) { this.form.attachment = event.target.files },
     async handleSubmit() {
       try {
         const { form } = this;
 
         const request = await this.$apollo.mutate({
           mutation: gql`
-            mutation ($author: String!, $subject: String!, $shortDesc: String!, $body: String!) {
-              CreateNews (author: $author, subject: $subject, shortDesc: $shortDesc, body: $body) {
+            mutation ($author: String!, $subject: String!, $shortDesc: String!, $body: String!, $attachment: Upload) {
+              CreateNews (author: $author, subject: $subject, shortDesc: $shortDesc, body: $body, attachment: $attachment) {
                 success,
-                message,
+                message
               }
             }
           `,
           variables: {
-            author: 'Febriadji',
+            author: this.$store.getters.getEmployee.fullname,
             subject: form.subject,
             shortDesc: form.body.slice(0, 200),
-            body: `<p>${form.body.replace(/\n/g, '</p>\n<p>')}</p>`,
+            body: `${form.body.replace(/\n/g, '<br>')}<br>`,
+            attachment: form.attachment && form.attachment[0],
           },
         });
 
@@ -98,6 +101,7 @@ export default {
           file: null,
         }
 
+        this.handleGetAllNews();
         setTimeout(() => this.handleCreateNewsIsOpen(), 1000);
       }
       catch (error0) {
@@ -154,7 +158,7 @@ export default {
 }
 .form {
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
 }
 .fields {
   border-bottom: 1px solid #22283180;
@@ -170,7 +174,7 @@ export default {
 .control {
   width: 100%;
 }
-.fields:nth-of-type(2) {
+.fields:nth-of-type(3) {
   border: none;
 }
 textarea {
@@ -184,22 +188,13 @@ textarea {
 .action .submit-btn {
   padding: 10px 20px;
   background: #baffd9;
-  border-radius: 10px;
-  border: 1px solid #688d79;
+  width: 150px;
   cursor: pointer;
-}
-.control-file {
-  display: none;
 }
 .file-btn {
-  font-size: 1.5rem;
+  padding: 10px 0;
   cursor: pointer;
-  transform: rotate(-90deg);
-  width: 40px; height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px;
+  background: transparent;
 }
 .file-btn:hover {
   background: #bac4ff50;
@@ -207,7 +202,7 @@ textarea {
 
 @media screen and (max-width: 540px) {
   .create-news-wrap.active {
-    height: 350px;
+    height: 380px;
   }
 }
 </style>
