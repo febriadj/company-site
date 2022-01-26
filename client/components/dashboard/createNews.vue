@@ -30,6 +30,7 @@
             id="file"
             :class="[$style.control, $style['control-file']]"
             @change="handleInputFile"
+            ref="fileInput"
           >
         </label>
         <label for="body" :class="$style.fields">
@@ -98,8 +99,9 @@ export default {
           subject: '',
           shortDesc: '',
           body: '',
-          file: null,
         }
+
+        this.$refs.fileInput.value = null;
 
         this.handleGetAllNews();
         setTimeout(() => this.handleCreateNewsIsOpen(), 1000);
