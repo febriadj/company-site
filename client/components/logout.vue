@@ -1,7 +1,7 @@
 <template>
   <div :class="[$style.logout, logoutIsOpen && $style.active]">
     <div :class="[$style['logout-wrap'], logoutIsOpen && $style.active]">
-      <h3 :class="$style.text">Are you sure you want to log out of this account?</h3>
+      <h3 :class="$style.text">Apakah Anda yakin ingin keluar dari akun ini?</h3>
       <span :class="$style.action">
         <button type="button" :class="$style.btn" @click="handleLogout">Yes, I'm sure</button>
         <button type="button" :class="$style.btn" @click="handleLogoutIsOpen">Cancel</button>
@@ -19,14 +19,14 @@ export default {
   },
   methods: {
     handleLogout() {
-      this.$store.dispatch('counter/isLoggedIn', false);
-      this.$store.dispatch('counter/setEmployeeData', null);
-
-      localStorage.removeItem('token');
+      this.handleLogoutIsOpen();
 
       setTimeout(() => {
-        this.handleLogoutIsOpen();
-      }, 2000);
+        this.$store.dispatch('counter/isLoggedIn', false);
+        this.$store.dispatch('counter/setEmployeeData', null);
+
+        localStorage.removeItem('token');
+      }, 500);
     },
   },
 }
@@ -62,7 +62,7 @@ export default {
 }
 .logout-wrap.active {
   padding: 20px;
-  width: 400px; height: 150px;
+  width: 300px; height: 150px;
   transition: cubic-bezier(0.18,0.89,0.32,1.27) 0.3s;
   transition-delay: 0.3s;
 }
@@ -76,13 +76,10 @@ export default {
 .action .btn {
   background: #baffd9;
   padding: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #608370;
   font-size: 0.95rem;
   cursor: pointer;
 }
 .action .btn:nth-child(2) {
-  border: 1px solid #926a74;
   background: #ffbacb;
 }
 </style>

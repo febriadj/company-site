@@ -15,18 +15,18 @@
         <button
           type="button"
           :class="$style.btn"
-          class="bx bx-user"
           @click="handleTest"
           v-if="isLoggedIn()"
         >
+          <i class="bx bx-user"></i>
         </button>
         <button
           type="button"
           :class="[$style.btn, $style['logout-btn']]"
-          class="bx bx-exit"
           @click="handleLogoutIsOpen"
           v-if="isLoggedIn()"
         >
+          <i class="bx bx-exit"></i>
         </button>
       </div>
     </div>
@@ -67,21 +67,16 @@ export default {
 .right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 20px;
 }
 .right .btn {
-  border-radius: 10px;
-  padding: 10px 15px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  border: 1px solid #686e8f;
-  background: #bac4ff;
   cursor: pointer;
 }
-.right .logout-btn {
-  border: 1px solid #926a74;
-  background: #ffbacb;
+.right .btn i {
+  font-size: 1.5rem;
 }
 </style>
