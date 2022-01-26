@@ -17,11 +17,22 @@
       :handleGetAllNews="handleGetAllNews"
     >
     </create-news>
+    <edit-news v-if="editNews.isOpen"
+      :editNews="editNews"
+      :handleEditNewsIsOpen="handleEditNewsIsOpen"
+      :handleGetAllNews="handleGetAllNews"
+    >
+    </edit-news>
     <logout
       :logoutIsOpen="logoutIsOpen"
       :handleLogoutIsOpen="handleLogoutIsOpen"
     >
     </logout>
+    <details-news
+      :details="details"
+      :handleDetailsIsOpen="handleDetailsIsOpen"
+    >
+    </details-news>
     <div :class="$style.plus" v-if="isLoggedIn() && employee().division === 'hr'">
       <div :class="$style['plus-wrap']">
         <button
@@ -39,20 +50,28 @@
         :handleLogoutIsOpen="handleLogoutIsOpen"
       >
       </navbar>
-      <news :news="news"></news>
+      <news
+        :news="news"
+        :handleDetailsIsOpen="handleDetailsIsOpen"
+        :handleGetAllNews="handleGetAllNews"
+        :handleEditNewsIsOpen="handleEditNewsIsOpen"
+      >
+      </news>
     </div>
   </div>
 </template>
 
 <script>
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 import navbar from '../components/navbar.vue';
+import editNews from '../components/dashboard/editNews.vue';
 import createNews from '../components/dashboard/createNews.vue';
 import news from '../components/dashboard/news.vue';
 import login from '../components/login.vue';
 import register from '../components/register.vue';
 import logout from '../components/logout.vue';
+import details from '../components/dashboard/details.vue';
 
 export default {
   name: 'dashboard-page',
@@ -60,9 +79,11 @@ export default {
     navbar,
     login,
     register,
+    editNews,
     createNews,
     news,
     logout,
+    'details-news': details,
   },
   data: () => ({
     loginFormIsOpen: false,
@@ -70,6 +91,14 @@ export default {
     logoutIsOpen: false,
     createNewsIsOpen: false,
     news: [],
+    editNews: {
+      isOpen: false,
+      data: null,
+    },
+    details: {
+      isOpen: false,
+      data: null,
+    },
   }),
   methods: {
     isLoggedIn() {
@@ -84,14 +113,33 @@ export default {
       this.registerFormIsOpen = !this.registerFormIsOpen;
     },
     handleCreateNewsIsOpen() { this.createNewsIsOpen = !this.createNewsIsOpen },
+    handleEditNewsIsOpen(args) {
+      this.editNews.isOpen = !this.editNews.isOpen;
+
+      if (this.editNews.isOpen) {
+        this.editNews.data = args;
+      } else {
+        this.editNews.data = null;
+      }
+    },
+    handleDetailsIsOpen(args) {
+      this.details.isOpen = !this.details.isOpen;
+
+      if (this.details.isOpen) {
+        this.details.data = args;
+      } else {
+        this.details.data = null;
+      }
+    },
     async handleGetAllNews() {
       try {
         const request = await this.$apollo.query({
           query: gql`{
             NewsFindAll {
-              id author subject shortDesc createdAt                
+              id author subject shortDesc closed createdAt                
             }
           }`,
+          fetchPolicy: 'network-only',
         });
 
         this.news = request.data.NewsFindAll;
