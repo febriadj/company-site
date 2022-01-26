@@ -11,17 +11,21 @@ Tumpukan teknologi yang digunakan pada proyek ini, antara lain:
 
 # Memulai
 ~~~
-git clone https://github.com/febriadj/company-site
+$ git clone https://github.com/febriadj/company-site
 
-cd company-site/ && code .
+$ cd company-site/ && code .
 ~~~
 ~~~
-npm install --force
+$ mv .env.example .env
+~~~
+Ubah nama file `.env.example` menjadi `.env`, lalu sesuaikan environment dengan kebutuhan.
+~~~
+$ npm install --force
 ~~~
 Jalakan perintah `npm install` diikuti dengan argumen `--force`, untuk menghindari terjadinya konflik atau dependensi yang saling ketergantungan.
 
 ~~~
-npm run dev
+$ npm run dev
 ~~~
 Jalankan aplikasi dalam mode development. kemudian buka http://localhost:3000 di browser.
 
